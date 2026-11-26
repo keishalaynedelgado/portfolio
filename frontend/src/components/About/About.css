@@ -1,0 +1,208 @@
+.about__split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.about__story {
+  display: grid;
+  gap: 1.5rem;
+}
+.about__lead {
+  font-size: clamp(1.45rem, 2.6vw, 2.15rem);
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+.about__lead mark {
+  background: linear-gradient(transparent 58%, var(--sky) 58%);
+  color: inherit;
+  padding-inline: 0.05em;
+}
+.about__body {
+  max-width: 36rem;
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Fact file card ---------- */
+.about__card {
+  position: relative;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border-radius: var(--radius);
+  background: var(--paper-2);
+  box-shadow: inset 0 0 0 1px var(--ink-line);
+  transform: rotate(1.5deg);
+  transition: transform 0.6s var(--ease), box-shadow 0.6s var(--ease);
+}
+.about__card:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: inset 0 0 0 1px var(--ink-line), 0 30px 50px -30px rgba(0, 0, 0, 0.35);
+}
+/* Punched hole like an ID card */
+.about__card::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 46px;
+  height: 8px;
+  margin-left: -23px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.about__card-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0 0.9rem;
+  border-bottom: 1.5px solid var(--ink);
+  font-size: 0.68rem;
+}
+.about__card dl {
+  margin: 0;
+}
+.about__fact {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.22);
+}
+.about__fact dt {
+  font-size: 0.66rem;
+  color: var(--blue-ink);
+  padding-top: 0.2rem;
+}
+.about__fact dd {
+  margin: 0;
+  font-weight: 550;
+  line-height: 1.35;
+}
+.about__card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  font-size: 0.62rem;
+}
+.about__barcode {
+  width: 120px;
+  height: 26px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--ink) 0 2px,
+    transparent 2px 4px,
+    var(--ink) 4px 5px,
+    transparent 5px 8px,
+    var(--ink) 8px 11px,
+    transparent 11px 13px
+  );
+}
+
+/* ---------- Interests ---------- */
+.about__interests {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  border-top: 1.5px solid var(--ink);
+}
+.interest {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.8rem;
+  height: 100%;
+  padding: 1.75rem 1.5rem 2rem;
+  isolation: isolate;
+  transition: color 0.45s var(--ease);
+}
+.about__interest {
+  border-right: 1px solid var(--ink-line);
+}
+.about__interest:last-child {
+  border-right: 0;
+}
+.interest::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.55s var(--ease);
+}
+.interest:hover {
+  color: var(--paper);
+}
+.interest:hover::before {
+  transform: scaleY(1);
+}
+.interest__num {
+  font-size: 0.68rem;
+  color: var(--blue-ink);
+  transition: color 0.45s var(--ease);
+}
+.interest:hover .interest__num {
+  color: var(--sky);
+}
+.interest__glyph svg {
+  width: 48px;
+  height: 48px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin: 0.4rem 0 0.6rem;
+  transition: transform 0.6s var(--ease), stroke 0.45s var(--ease);
+}
+.interest:hover .interest__glyph svg {
+  transform: rotate(-10deg) scale(1.08);
+  stroke: var(--sky);
+}
+.interest__title {
+  font-size: 1.3rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.interest__body {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  opacity: 0.82;
+}
+
+@media (max-width: 999px) {
+  .about__split {
+    grid-template-columns: 1fr;
+  }
+  .about__card {
+    max-width: 460px;
+  }
+  .about__interests {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .about__interest:nth-child(2) {
+    border-right: 0;
+  }
+  .about__interest:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--ink-line);
+  }
+}
+
+@media (max-width: 560px) {
+  .about__interests {
+    grid-template-columns: 1fr;
+  }
+  .about__interest {
+    border-right: 0;
+    border-bottom: 1px solid var(--ink-line);
+  }
+  .about__card {
+    transform: none;
+  }
+}

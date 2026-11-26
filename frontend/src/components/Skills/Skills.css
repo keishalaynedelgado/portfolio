@@ -1,0 +1,202 @@
+.skills {
+  overflow: hidden;
+}
+
+/* ---------- Filters ---------- */
+.skills__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+.skills__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+  font-weight: 600;
+  font-size: 0.93rem;
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.skills__filter:hover {
+  transform: translateY(-2px);
+}
+.skills__filter.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+.skills__count {
+  font-size: 0.66rem;
+  opacity: 0.6;
+}
+.skills__swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.swatch--languages {
+  background: var(--blue-deep);
+}
+.swatch--frameworks {
+  background: var(--sky);
+}
+.swatch--tools {
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--paper);
+}
+.swatch--databases {
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+/* ---------- Table ---------- */
+.skills__table {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.element {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 1 / 1.08;
+  padding: 0.6rem 0.65rem 0.7rem;
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    transform 0.45s var(--ease),
+    opacity 0.45s var(--ease),
+    filter 0.45s var(--ease),
+    box-shadow 0.45s var(--ease);
+  cursor: default;
+}
+.element:hover {
+  transform: translateY(-6px) rotate(-2deg);
+  box-shadow: 0 18px 30px -16px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+.element.is-dim {
+  opacity: 0.18;
+  transform: scale(0.94);
+  filter: grayscale(1);
+}
+
+.element--languages {
+  background: var(--blue-deep);
+  color: var(--paper);
+}
+.element--frameworks {
+  background: var(--sky);
+  color: var(--ink);
+}
+.element--tools {
+  background: var(--ink);
+  color: var(--paper);
+}
+.element--databases {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+.element--databases:hover {
+  box-shadow: inset 0 0 0 1.5px var(--ink), 0 18px 30px -16px rgba(0, 0, 0, 0.5);
+}
+
+/* Shine sweep on hover */
+.element::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.25) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 0.8s var(--ease);
+  pointer-events: none;
+}
+.element:hover::after {
+  transform: translateX(120%);
+}
+
+.element__n {
+  font-size: 0.62rem;
+  opacity: 0.75;
+}
+.element__group {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.65rem;
+  font-size: 0.5rem;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.element:hover .element__group {
+  opacity: 0.75;
+  transform: none;
+}
+.element__symbol {
+  font-size: clamp(1.6rem, 2.7vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.element__name {
+  font-size: 0.74rem;
+  font-weight: 550;
+  line-height: 1.2;
+}
+
+/* ---------- Legend ---------- */
+.skills__legend {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem 2rem;
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+  padding-top: 1.75rem;
+  border-top: 1.5px solid var(--ink);
+}
+.skills__legend dt {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 650;
+  margin-bottom: 0.35rem;
+}
+.skills__legend dd {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .skills__table {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+@media (max-width: 860px) {
+  .skills__table {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .skills__legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .skills__table {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .element__symbol {
+    font-size: 1.9rem;
+  }
+}
+@media (max-width: 420px) {
+  .skills__legend {
+    grid-template-columns: 1fr;
+  }
+}

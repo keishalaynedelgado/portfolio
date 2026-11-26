@@ -1,0 +1,48 @@
+.section-heading {
+  display: grid;
+  gap: 1.25rem;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+  max-width: 62rem;
+}
+
+.section-heading__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  opacity: 0.85;
+}
+
+.section-heading__index {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.4rem;
+  height: 1.6rem;
+  padding-inline: 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.section-heading__rule {
+  width: 3.5rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.section-heading__title {
+  font-size: clamp(2.5rem, 6.4vw, 5.6rem);
+  font-weight: 650;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.section-heading__title .serif {
+  font-size: 1.08em;
+  letter-spacing: -0.02em;
+}
+
+.section-heading__intro {
+  max-width: 40rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  opacity: 0.85;
+}

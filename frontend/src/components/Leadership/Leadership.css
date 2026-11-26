@@ -1,0 +1,190 @@
+.leadership .section-heading__intro {
+  opacity: 1;
+}
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+.timeline__item {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) 64px minmax(0, 1.6fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: start;
+}
+
+/* Giant outlined period */
+.timeline__period {
+  position: sticky;
+  top: calc(var(--nav-h) + 2rem);
+  text-align: right;
+}
+.timeline__year {
+  display: inline-block;
+  font-size: clamp(2.6rem, 5.6vw, 5rem);
+  font-weight: 750;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1.6px var(--ink);
+  transition: color 0.5s var(--ease);
+}
+.timeline__item:hover .timeline__year {
+  color: var(--ink);
+}
+
+/* Vertical rail with numbered node */
+.timeline__rail {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  justify-content: center;
+}
+.timeline__rail::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: calc(-1 * clamp(2.5rem, 5vw, 4rem));
+  left: 50%;
+  width: 1.5px;
+  margin-left: -0.75px;
+  background: var(--ink);
+}
+.timeline__item:last-child .timeline__rail::before {
+  bottom: 0;
+}
+.timeline__node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--sky);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  box-shadow: 0 0 0 6px var(--sky);
+  transition: transform 0.5s var(--ease), background-color 0.4s var(--ease), color 0.4s var(--ease);
+}
+.timeline__item:hover .timeline__node {
+  transform: scale(1.1) rotate(-10deg);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Card */
+.timeline__card {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: var(--radius-lg);
+  background: var(--paper);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), 0 30px 50px -35px rgba(0, 0, 0, 0.45);
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+.timeline__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), 0 40px 60px -35px rgba(0, 0, 0, 0.55);
+}
+/* Notch pointing at the rail */
+.timeline__card::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -8px;
+  width: 16px;
+  height: 16px;
+  background: var(--paper);
+  transform: rotate(45deg);
+  border-radius: 3px;
+}
+
+.timeline__period-inline {
+  display: none;
+  color: var(--blue-ink);
+  margin-bottom: 0.4rem;
+}
+.timeline__org {
+  font-size: clamp(1.45rem, 2.6vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+.timeline__loc {
+  margin-top: 0.35rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.timeline__roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.timeline__roles li {
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: var(--blue-deep);
+  color: var(--paper);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.timeline__roles li + li {
+  background: var(--ink);
+}
+
+.timeline__label {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed rgba(0, 0, 0, 0.25);
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: var(--blue-ink);
+}
+.timeline__list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+}
+.timeline__list li {
+  position: relative;
+  padding-left: 1.75rem;
+  line-height: 1.55;
+}
+.timeline__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.9rem;
+  height: 1.5px;
+  background: var(--blue);
+  transition: width 0.4s var(--ease);
+}
+.timeline__list li:hover::before {
+  width: 1.3rem;
+}
+
+@media (max-width: 860px) {
+  .timeline__item {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .timeline__period {
+    display: none;
+  }
+  .timeline__period-inline {
+    display: block;
+  }
+  .timeline__node {
+    width: 40px;
+    height: 40px;
+    font-size: 0.7rem;
+    box-shadow: 0 0 0 5px var(--sky);
+  }
+  .timeline__card::before {
+    top: 12px;
+  }
+}

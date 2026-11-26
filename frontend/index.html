@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keisha Layne L. Delgado — Computer Science Student & Aspiring Software Developer</title>
+    <meta
+      name="description"
+      content="Portfolio of Keisha Layne L. Delgado, a Computer Science student at Xavier University – Ateneo de Cagayan building test automation and AI-powered applications."
+    />
+    <meta name="theme-color" content="#EFECE3" />
+    <meta property="og:title" content="Keisha Layne L. Delgado — Portfolio" />
+    <meta
+      property="og:description"
+      content="Computer Science student and aspiring software developer. Test automation, AI-powered apps, and practical software."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Start the intro curtain before first paint so the hero never flashes underneath it.
+      try {
+        if (!sessionStorage.getItem("kld-intro-seen") && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          document.documentElement.classList.add("intro-active");
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
