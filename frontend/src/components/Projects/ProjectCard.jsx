@@ -5,6 +5,7 @@ import { ArrowUpRight, GitHub, Plus } from "../ui/Icons";
 import ProjectScreens from "./ProjectScreens";
 import ProjectVisual from "./ProjectVisual";
 import FireDragon from "./FireDragon/FireDragon";
+import WalkingBread from "./WalkingBread/WalkingBread";
 
 export default function ProjectCard({ project, index }) {
   const [open, setOpen] = useState(false);
@@ -42,7 +43,7 @@ export default function ProjectCard({ project, index }) {
 
   return (
     <article
-      className={`project ${flipped ? "project--flipped" : ""} ${open ? "is-open" : ""} ${hasScreens ? "project--screens" : ""} ${project.mascot ? "project--mascot" : ""}`}
+      className={`project ${flipped ? "project--flipped" : ""} ${open ? "is-open" : ""} ${hasScreens ? "project--screens" : ""} ${project.mascot ? `project--mascot project--mascot-${project.mascot}` : ""}`}
       aria-labelledby={`${project.id}-title`}
     >
       <div className="project__main">
@@ -56,7 +57,7 @@ export default function ProjectCard({ project, index }) {
         >
           {hasScreens ? <ProjectScreens project={project} onOpen={openScreens} /> : <ProjectVisual project={project} />}
         </div>
-        {project.mascot === "dragon" && <FireDragon />}
+        {project.mascot === "bread" && <WalkingBread />}
       </Reveal>
 
       <Reveal className="project__content" delay={120}>
@@ -164,6 +165,8 @@ export default function ProjectCard({ project, index }) {
           </ul>
         </Reveal>
       )}
+
+      {project.mascot === "dragon" && <FireDragon />}
 
       <Lightbox items={viewer.items} index={viewer.index} onClose={closeViewer} onIndex={setViewerIndex} />
     </article>

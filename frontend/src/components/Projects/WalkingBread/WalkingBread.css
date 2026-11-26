@@ -1,0 +1,225 @@
+/* ==========================================================
+   Synthie's walking bread: strolls along the top edge of the
+   screenshot frame. --bh is its height (set in Projects.css).
+   ========================================================== */
+.walking-bread {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 0;
+  height: var(--bh);
+  transform: translateY(calc(-100% + 3px)); /* feet on the frame's top edge */
+  z-index: 5;
+  pointer-events: none;
+}
+.walking-bread__walker {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  aspect-ratio: 120 / 142;
+  will-change: transform;
+}
+
+.walking-bread__body {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.3));
+}
+.walking-bread__body:focus-visible {
+  outline: 2px solid var(--sky);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+.walking-bread__orient {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.25s var(--ease);
+}
+.is-left .walking-bread__orient {
+  transform: scaleX(-1);
+}
+.walking-bread svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.walking-bread svg g {
+  transform-box: view-box;
+}
+
+/* ---------- Walk cycle ---------- */
+.wb-leg--l {
+  transform-origin: 47px 118px;
+}
+.wb-leg--r {
+  transform-origin: 73px 118px;
+}
+.wb-arm--l {
+  transform-origin: 25px 80px;
+}
+.wb-arm--r {
+  transform-origin: 95px 80px;
+}
+.wb-bob {
+  transform-origin: 60px 122px;
+}
+.is-walking .wb-leg--l {
+  animation: wb-step 0.5s ease-in-out infinite alternate;
+}
+.is-walking .wb-leg--r {
+  animation: wb-step 0.5s ease-in-out infinite alternate-reverse;
+}
+.is-walking .wb-arm--l {
+  animation: wb-swing 0.5s ease-in-out infinite alternate-reverse;
+}
+.is-walking .wb-arm--r {
+  animation: wb-swing 0.5s ease-in-out infinite alternate;
+}
+.is-walking .wb-bob {
+  animation: wb-bob 0.25s ease-in-out infinite alternate;
+}
+
+/* Wave with the front arm */
+.is-waving .wb-arm--r {
+  animation: wb-wave 0.4s ease-in-out infinite alternate;
+}
+
+/* Blink every few seconds */
+.wb-eyes {
+  transform-origin: 60px 74px;
+  animation: wb-blink 4.2s infinite;
+}
+
+/* Hop on click */
+.is-hopping .walking-bread__body {
+  animation: wb-hop 0.6s cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+.is-talking .wb-mouth {
+  d: path("M52 84 Q60 96 68 84 Z");
+  fill: #3a2412;
+}
+
+/* ---------- Speech bubble ---------- */
+/* Beside the bread at head height (so it never hides under the navbar),
+   on the right by default and on the left near the right end. */
+.walking-bread__bubble {
+  position: absolute;
+  left: calc(100% + 0.5rem);
+  top: 22%;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateX(-6px) scale(0.9);
+  transform-origin: left center;
+  transition:
+    opacity 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+.walking-bread__bubble::after {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  border: 6px solid transparent;
+  border-right-color: var(--paper);
+  transform: translateY(-50%);
+}
+.bubble-left .walking-bread__bubble {
+  left: auto;
+  right: calc(100% + 0.5rem);
+  transform: translateX(6px) scale(0.9);
+  transform-origin: right center;
+}
+.bubble-left .walking-bread__bubble::after {
+  right: auto;
+  left: 100%;
+  border-right-color: transparent;
+  border-left-color: var(--paper);
+}
+.is-talking .walking-bread__bubble {
+  opacity: 1;
+  transform: none;
+}
+
+/* Reduced motion: stands still near the left */
+.is-calm .walking-bread__walker {
+  left: 8%;
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes wb-step {
+  from {
+    transform: rotate(-22deg);
+  }
+  to {
+    transform: rotate(22deg);
+  }
+}
+@keyframes wb-swing {
+  from {
+    transform: rotate(-24deg);
+  }
+  to {
+    transform: rotate(20deg);
+  }
+}
+@keyframes wb-bob {
+  from {
+    transform: translateY(0) rotate(-2deg);
+  }
+  to {
+    transform: translateY(-3px) rotate(2deg);
+  }
+}
+@keyframes wb-wave {
+  from {
+    transform: rotate(-60deg);
+  }
+  to {
+    transform: rotate(-120deg);
+  }
+}
+@keyframes wb-blink {
+  0%,
+  94%,
+  100% {
+    transform: scaleY(1);
+  }
+  97% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes wb-hop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  20% {
+    transform: translateY(0) scale(1.08, 0.9);
+  }
+  50% {
+    transform: translateY(-38%) scale(0.96, 1.06);
+  }
+  85% {
+    transform: translateY(0) scale(1.06, 0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .walking-bread *,
+  .walking-bread__bubble {
+    animation: none !important;
+    transition: none !important;
+  }
+}

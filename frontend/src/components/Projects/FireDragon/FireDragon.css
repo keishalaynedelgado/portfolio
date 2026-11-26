@@ -1,51 +1,46 @@
 /* ==========================================================
-   K Games fire-breathing dragon (sits on the project's media frame)
-   --d is the dragon's size (set on .project--mascot in Projects.css);
-   everything else is measured from it.
+   K Games dragon flying around its project card.
+   --d is the dragon's size (set on .project--mascot in Projects.css).
+   Position, facing and banking are set from JS (FireDragon.jsx);
+   wing flaps, the hover bob and the flames are CSS.
    ========================================================== */
 .fire-dragon {
-  --cycle: 5s;
   position: absolute;
   inset: 0;
-  z-index: 4;
+  z-index: 6;
   pointer-events: none;
 }
 
-/* Flight path: hovers just above the top-left corner of the frame */
 .fire-dragon__flight {
   position: absolute;
+  left: 0;
+  top: 0;
   width: var(--d);
   height: var(--d);
-  left: calc(var(--d) * -0.34);
-  top: calc(var(--d) * -0.6);
   opacity: 0;
-  transform: translate(-46%, 38%) rotate(-14deg) scale(0.45);
-  transition:
-    opacity 0.5s var(--ease),
-    transform 1.25s cubic-bezier(0.2, 0.9, 0.25, 1.15);
+  transition: opacity 0.4s var(--ease);
+  will-change: transform;
 }
-.fire-dragon.is-in .fire-dragon__flight {
-  opacity: 1;
-  transform: none;
+.fire-dragon__orient {
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
 }
-
 .fire-dragon__rig {
   position: relative;
   width: 100%;
   height: 100%;
-}
-.is-in .fire-dragon__rig {
-  animation: fd-hover 1.5s ease-in-out infinite alternate;
+  animation: fd-hover 0.9s ease-in-out infinite alternate;
 }
 
 /* ---------- The dragon ---------- */
-/* Only the dragon's painted shape is clickable, so the tabs around it stay usable. */
+/* Only the dragon's painted shape is clickable, so what it flies over stays usable. */
 .fire-dragon__body {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.45));
 }
 .fire-dragon__art svg > g {
   pointer-events: visiblePainted;
@@ -53,6 +48,7 @@
 .fire-dragon__body:focus-visible {
   outline: 2px solid var(--sky);
   outline-offset: 4px;
+  border-radius: 50%;
 }
 .fire-dragon__art,
 .fire-dragon__art svg {
@@ -60,12 +56,12 @@
   width: 100%;
   height: 100%;
 }
-.is-in .fire-dragon__art {
+.fire-dragon__art {
   transform-origin: 50% 60%;
-  animation: fd-recoil var(--cycle) ease-in-out 1.3s infinite;
+  transition: transform 0.25s var(--ease);
 }
-.is-burst .fire-dragon__art {
-  animation: fd-recoil-burst 1.05s ease-out;
+.is-firing .fire-dragon__art {
+  transform: translateX(-5px) rotate(-6deg);
 }
 
 /* Wings flap from the shoulders, the tail sways (groups inside dragon.svg) */
@@ -75,24 +71,18 @@
 }
 .fire-dragon .d-wing--l {
   transform-origin: 74px 116px;
+  animation: fd-flap-l 0.3s ease-in-out infinite alternate;
 }
 .fire-dragon .d-wing--r {
   transform-origin: 126px 116px;
+  animation: fd-flap-r 0.3s ease-in-out infinite alternate;
 }
 .fire-dragon .d-tail {
   transform-origin: 122px 166px;
-}
-.is-in .d-wing--l {
-  animation: fd-flap-l 0.38s ease-in-out infinite alternate;
-}
-.is-in .d-wing--r {
-  animation: fd-flap-r 0.38s ease-in-out infinite alternate;
-}
-.is-in .d-tail {
-  animation: fd-tail 1.2s ease-in-out infinite alternate;
+  animation: fd-tail 0.9s ease-in-out infinite alternate;
 }
 
-/* ---------- Fire stream: starts at the mouth, blasts to the right ---------- */
+/* ---------- Fire: starts at the mouth, blasts the way the dragon faces ---------- */
 .fire-dragon__fire {
   position: absolute;
   z-index: 1;
@@ -103,14 +93,26 @@
   transform-origin: 0 50%;
   transform: scaleX(0);
   opacity: 0;
+  transition:
+    transform 0.22s cubic-bezier(0.3, 0.7, 0.3, 1),
+    opacity 0.3s ease;
+}
+.fire-dragon__fire::before {
+  content: "";
+  position: absolute;
+  inset: -40% -10% -40% 10%;
+  background: radial-gradient(closest-side, rgba(255, 150, 40, 0.45), transparent);
+  filter: blur(10px);
 }
 .fire-dragon__fire svg {
+  position: relative;
   width: 100%;
   height: 100%;
   overflow: visible;
 }
-.is-in .fire-dragon__fire {
-  animation: fd-blast var(--cycle) cubic-bezier(0.3, 0.7, 0.3, 1) 1.3s infinite;
+.is-firing .fire-dragon__fire {
+  transform: scaleX(1);
+  opacity: 1;
 }
 .is-burst .fire-dragon__fire {
   animation: fd-burst 1.05s cubic-bezier(0.2, 0.8, 0.3, 1);
@@ -120,13 +122,13 @@
   transform-box: fill-box;
   transform-origin: 0 50%;
 }
-.is-in .fire-dragon__flame--outer {
+.is-firing .fire-dragon__flame--outer {
   animation: fd-flicker 0.16s ease-in-out infinite alternate;
 }
-.is-in .fire-dragon__flame--mid {
+.is-firing .fire-dragon__flame--mid {
   animation: fd-flicker 0.12s ease-in-out infinite alternate-reverse;
 }
-.is-in .fire-dragon__flame--core {
+.is-firing .fire-dragon__flame--core {
   animation: fd-flicker 0.09s ease-in-out infinite alternate;
 }
 
@@ -141,7 +143,7 @@
   box-shadow: 0 0 10px 2px rgba(255, 140, 40, 0.8);
   opacity: 0;
 }
-.is-in .fire-dragon__ember {
+.is-firing .fire-dragon__ember {
   animation: fd-ember 0.9s ease-out infinite;
   animation-delay: calc(var(--e) * -0.11s);
 }
@@ -152,72 +154,48 @@
   --dy: 1;
 }
 
-/* Warm light that washes over the screenshot while the fire is on */
-.fire-dragon__glow {
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius-lg);
-  background: radial-gradient(ellipse 80% 55% at 35% 0%, rgba(255, 150, 40, 0.55), transparent 70%);
-  mix-blend-mode: screen;
-  opacity: 0;
+/* ---------- Reduced motion: parked between the columns, still flame ---------- */
+.is-calm .fire-dragon__flight {
+  opacity: 1;
+  left: calc(50% - var(--d) * 0.75);
+  top: calc(var(--d) * -0.3);
 }
-.is-in .fire-dragon__glow {
-  animation: fd-glow var(--cycle) ease-out 1.3s infinite;
-}
-.is-burst .fire-dragon__glow {
-  animation: fd-glow-burst 1.05s ease-out;
+.is-calm .fire-dragon__fire {
+  opacity: 0.9;
+  transform: scaleX(0.6);
 }
 
 /* ---------- Keyframes ---------- */
 @keyframes fd-hover {
   from {
-    transform: translateY(0) rotate(-2deg);
+    transform: translateY(-4px);
   }
   to {
-    transform: translateY(-12px) rotate(2deg);
+    transform: translateY(6px);
   }
 }
 @keyframes fd-flap-l {
   from {
-    transform: rotate(-10deg) scaleY(0.92);
+    transform: rotate(-12deg) scaleY(0.9);
   }
   to {
-    transform: rotate(26deg);
+    transform: rotate(28deg);
   }
 }
 @keyframes fd-flap-r {
   from {
-    transform: rotate(10deg) scaleY(0.92);
+    transform: rotate(12deg) scaleY(0.9);
   }
   to {
-    transform: rotate(-26deg);
+    transform: rotate(-28deg);
   }
 }
 @keyframes fd-tail {
   from {
-    transform: rotate(-7deg);
+    transform: rotate(-8deg);
   }
   to {
-    transform: rotate(9deg);
-  }
-}
-@keyframes fd-blast {
-  0%,
-  100% {
-    transform: scaleX(0);
-    opacity: 0;
-  }
-  5% {
-    transform: scaleX(1);
-    opacity: 1;
-  }
-  28% {
-    transform: scaleX(1.04);
-    opacity: 1;
-  }
-  36% {
-    transform: scaleX(1.08);
-    opacity: 0;
+    transform: rotate(10deg);
   }
 }
 @keyframes fd-burst {
@@ -238,27 +216,6 @@
     opacity: 0;
   }
 }
-@keyframes fd-recoil {
-  0%,
-  34%,
-  100% {
-    transform: none;
-  }
-  4%,
-  28% {
-    transform: translateX(-5px) rotate(-5deg);
-  }
-}
-@keyframes fd-recoil-burst {
-  0%,
-  100% {
-    transform: none;
-  }
-  10%,
-  70% {
-    transform: translateX(-8px) rotate(-8deg) scale(1.05);
-  }
-}
 @keyframes fd-flicker {
   from {
     transform: scale(1, 0.86);
@@ -273,57 +230,16 @@
     opacity: 1;
   }
   100% {
-    transform: translate(calc(var(--d) * 2.2), calc(var(--dy) * (12px + var(--e) * 5px))) scale(0.2);
+    transform: translate(calc(var(--d) * 2), calc(var(--dy) * (12px + var(--e) * 5px))) scale(0.2);
     opacity: 0;
-  }
-}
-@keyframes fd-glow {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  6%,
-  28% {
-    opacity: 1;
-  }
-  40% {
-    opacity: 0;
-  }
-}
-@keyframes fd-glow-burst {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  15%,
-  70% {
-    opacity: 1;
   }
 }
 
-@media (max-width: 640px) {
-  .fire-dragon__flight {
-    left: calc(var(--d) * -0.12);
-  }
-  .fire-dragon__fire {
-    width: calc(var(--d) * 2.4);
-  }
-}
-
-/* Reduced motion: no flight, flapping or blasts; a still flame stays. */
 @media (prefers-reduced-motion: reduce) {
   .fire-dragon *,
   .fire-dragon .d-wing,
   .fire-dragon .d-tail {
     animation: none !important;
     transition: none !important;
-  }
-  .fire-dragon__flight {
-    opacity: 1;
-    transform: none;
-  }
-  .fire-dragon__fire {
-    opacity: 0.9;
-    transform: scaleX(0.7);
   }
 }

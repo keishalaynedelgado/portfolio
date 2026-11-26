@@ -84,7 +84,8 @@ No data is made up. Save new screenshots as `.webp` (or `.png`) in `frontend/pub
 - The hero dot grid reacts to the cursor, and a click sends a ripple through it.
 - Custom cursor with "View" / "Play" labels, plus magnetic buttons (mouse only).
 - Screenshot frames scroll on hover, and a lightbox has keyboard controls (Esc, ← →).
-- The K Games dragon (from the K Games project's own artwork, `mascot: "dragon"` in `projects.js`) flies in over the K Games screenshot, flaps its wings and breathes fire every few seconds. Clicking it fires a bigger blast. The art in `components/Projects/FireDragon/dragon.svg` was generated from `E:\Chatbot\frontend\src\dragon.js` ("fire" pose).
+- The K Games dragon (from the K Games project's own artwork, `mascot: "dragon"` in `projects.js`) flies around the K Games card. It turns to face where it's going, breathes fire every few seconds, and leaves when the card scrolls almost out of view. Clicking it fires a bigger blast. The art in `components/Projects/FireDragon/dragon.svg` was generated from `E:\Chatbot\frontend\src\dragon.js` ("fire" pose).
+- A walking slice of bread (`mascot: "bread"`, `components/Projects/WalkingBread/`) strolls along the top of the Synthie screenshot, stops to look around and waves. Clicking it makes it hop and say "No passwords here!".
 
 All of these switch off when the visitor's system asks for reduced motion, and on touch devices the native cursor stays.
 
