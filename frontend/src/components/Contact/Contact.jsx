@@ -35,8 +35,13 @@ function ContactRow({ icon: Icon, label, value, href, display, external, childre
 
 const pretty = (url) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
 
+// Opens Gmail in the browser with a new message to this address, instead of
+// relying on a desktop mail app (mailto: does nothing when none is set up).
+const gmailCompose = (to) => `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}`;
+
 export default function Contact() {
   const { email, linkedin, github } = profile.contact;
+  const emailHref = email ? gmailCompose(email) : "";
   const [copied, setCopied] = useState(false);
 
   const copyEmail = async () => {
@@ -45,7 +50,7 @@ export default function Contact() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      window.location.href = `mailto:${email}`;
+      window.open(emailHref, "_blank", "noreferrer");
     }
   };
 
@@ -90,7 +95,14 @@ export default function Contact() {
         <div className="contact__side">
         {email && (
           <Reveal delay={200} className="contact__badge-wrap">
-            <a className="contact__badge" href={`mailto:${email}`} data-magnetic aria-label={`Email ${profile.firstName}`}>
+            <a
+              className="contact__badge"
+              href={emailHref}
+              target="_blank"
+              rel="noreferrer"
+              data-magnetic
+              aria-label={`Email ${profile.firstName} in Gmail (opens in a new tab)`}
+            >
               <svg viewBox="0 0 200 200" className="contact__badge-ring" aria-hidden="true">
                 <defs>
                   <path id="badge-path" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
@@ -108,7 +120,7 @@ export default function Contact() {
           </Reveal>
         )}
         <Reveal as="ul" delay={120} className="contact__list" aria-label="Contact links">
-          <ContactRow icon={Mail} label="Email" value={email} href={`mailto:${email}`}>
+          <ContactRow icon={Mail} label="Email" value={email} href={emailHref} external>
             <button type="button" className="contact__copy" onClick={copyEmail} aria-label="Copy email address">
               {copied ? <Check /> : <Copy />}
               <span aria-live="polite">{copied ? "Copied" : "Copy"}</span>

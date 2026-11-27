@@ -24,7 +24,7 @@ export const profile = {
 
   contact: {
     email: "keishadelgado2560@gmail.com",
-    linkedin: "", // full URL, e.g. "https://www.linkedin.com/in/your-handle"
+    linkedin: "https://www.linkedin.com/in/keisha-delgado-483339424/",
     github: "https://github.com/keishalaynedelgado",
   },
 
