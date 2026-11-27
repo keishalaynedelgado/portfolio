@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import dragonMarkup from "./dragon-side.svg?raw";
+import Flame from "./Flame";
 import "./FireDragon.css";
 
 const EMBERS = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -249,39 +250,7 @@ export default function FireDragon() {
           <div className="fire-dragon__rig">
             {/* The one flame: it starts at the mouth and turns with the dragon. */}
             <div className="fire-dragon__fire" aria-hidden="true">
-              <svg viewBox="0 0 400 120" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="fd-outer" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0" stopColor="#ffb347" />
-                    <stop offset="0.55" stopColor="#ff7a2f" />
-                    <stop offset="1" stopColor="#e8452a" stopOpacity="0.85" />
-                  </linearGradient>
-                  <linearGradient id="fd-mid" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0" stopColor="#fff1a8" />
-                    <stop offset="0.6" stopColor="#ffd24a" />
-                    <stop offset="1" stopColor="#ff9a2f" />
-                  </linearGradient>
-                  <filter id="fd-blur" x="-10%" y="-30%" width="120%" height="160%">
-                    <feGaussianBlur stdDeviation="2.2" />
-                  </filter>
-                </defs>
-                <path
-                  className="fire-dragon__flame fire-dragon__flame--outer"
-                  d="M0 52 C60 30 120 18 200 14 C250 12 300 4 340 18 C380 30 400 50 392 62 C400 76 378 98 340 104 C300 114 250 108 200 106 C120 102 60 88 0 68 Z"
-                  fill="url(#fd-outer)"
-                  filter="url(#fd-blur)"
-                />
-                <path
-                  className="fire-dragon__flame fire-dragon__flame--mid"
-                  d="M0 55 C70 40 140 32 220 30 C270 30 320 28 350 42 C372 52 372 70 350 80 C320 92 270 92 220 90 C140 88 70 80 0 65 Z"
-                  fill="url(#fd-mid)"
-                />
-                <path
-                  className="fire-dragon__flame fire-dragon__flame--core"
-                  d="M0 57 C80 50 160 46 240 48 C280 49 310 52 320 60 C310 68 280 72 240 72 C160 74 80 70 0 63 Z"
-                  fill="#fffbe6"
-                />
-              </svg>
+              <Flame idPrefix="fd-" />
               {EMBERS.map((i) => (
                 <i key={i} className="fire-dragon__ember" style={{ "--e": i }} />
               ))}

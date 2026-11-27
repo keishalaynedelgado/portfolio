@@ -188,3 +188,23 @@
     top: 12px;
   }
 }
+
+/* Optional photo inside a timeline card (e.g. the MeldCX OJT team) */
+.timeline__photo {
+  margin: 1.25rem 0 0.25rem;
+}
+.timeline__photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 1px var(--ink-line);
+}
+.timeline__photo figcaption {
+  margin-top: 0.55rem;
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}

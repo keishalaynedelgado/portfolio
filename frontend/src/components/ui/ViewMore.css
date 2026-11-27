@@ -1,0 +1,84 @@
+/* "View more" / "Show less" under a list (ViewMore.jsx) */
+.view-more {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+.view-more__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition:
+    background 0.3s var(--ease),
+    color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+.view-more__btn:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+.view-more__count {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+}
+.view-more__icon {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.4s var(--ease);
+}
+.view-more__btn.is-open .view-more__icon {
+  transform: rotate(180deg);
+}
+.view-more__btn:hover .view-more__icon {
+  transform: translateY(2px);
+}
+.view-more__btn.is-open:hover .view-more__icon {
+  transform: rotate(180deg) translateY(2px);
+}
+
+/* on the paper background (Certificates) */
+.view-more--light .view-more__btn {
+  background: var(--ink);
+  color: var(--paper);
+}
+.view-more--light .view-more__btn:hover {
+  background: var(--blue-deep);
+}
+.view-more--light .view-more__count {
+  background: var(--sky);
+  color: var(--ink);
+}
+
+/* on the dark panel (Selected Work) */
+.view-more--dark .view-more__btn {
+  background: var(--paper);
+  color: var(--ink);
+}
+.view-more--dark .view-more__btn:hover {
+  background: var(--sky);
+}
+.view-more--dark .view-more__count {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* items revealed by "View more" fade up into place */
+.view-more-reveal {
+  animation: view-more-in 0.6s var(--ease) both;
+}
+@keyframes view-more-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .view-more-reveal {
+    animation: none;
+  }
+}

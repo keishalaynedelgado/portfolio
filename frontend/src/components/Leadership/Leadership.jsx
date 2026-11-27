@@ -9,14 +9,14 @@ export default function Leadership() {
       <div className="container">
         <SectionHeading
           index="04"
-          label="Leadership & Organizations"
+          label="Experience & Leadership"
           id="leadership-title"
           title={
             <>
-              Planning, organizing &amp; <span className="serif">hosting.</span>
+              Building, organizing &amp; <span className="serif">leading.</span>
             </>
           }
-          intro="Beyond code: helping tech communities plan projects, run events, and keep people engaged."
+          intro="My OJT at MeldCX, plus helping tech communities plan projects, run events, and keep people engaged."
         />
 
         <ol className="timeline">
@@ -42,6 +42,13 @@ export default function Leadership() {
                       ))}
                     </ul>
                   </header>
+
+                  {item.photo && (
+                    <figure className="timeline__photo">
+                      <img src={item.photo.src} alt={item.photo.alt} loading="lazy" decoding="async" width="1400" height="788" />
+                      {item.photo.caption && <figcaption className="mono">{item.photo.caption}</figcaption>}
+                    </figure>
+                  )}
 
                   <h4 className="timeline__label mono">Responsibilities</h4>
                   <ul className="timeline__list">

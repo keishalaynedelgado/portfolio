@@ -35,7 +35,7 @@ export default function Footer() {
             © {year} {profile.name}
           </span>
           <span>
-            {profile.role} · {profile.universityShort}
+            {profile.title} · {profile.universityShort}
           </span>
         </div>
       </div>

@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Keisha Layne L. Delgado — Computer Science Student & Aspiring Software Developer</title>
+    <title>Keisha Layne L. Delgado — Aspiring Web Developer</title>
     <meta
       name="description"
-      content="Portfolio of Keisha Layne L. Delgado, a Computer Science student at Xavier University – Ateneo de Cagayan building test automation and AI-powered applications."
+      content="Portfolio of Keisha Layne L. Delgado, an aspiring web developer building web apps, test automation, MCP servers and AI-powered applications."
     />
     <meta name="theme-color" content="#EFECE3" />
     <meta property="og:title" content="Keisha Layne L. Delgado — Portfolio" />
     <meta
       property="og:description"
-      content="Computer Science student and aspiring software developer. Test automation, AI-powered apps, and practical software."
+      content="Aspiring web developer. Web apps, test automation, MCP servers and AI-powered apps."
     />
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -24,9 +24,10 @@
       rel="stylesheet"
     />
     <script>
-      // Start the intro curtain before first paint so the hero never flashes underneath it.
+      // Hold the hero's entrance animations from the first paint while the scroll intro
+      // is showing (Intro.jsx hands off). Not on deep links or with reduced motion.
       try {
-        if (!sessionStorage.getItem("kld-intro-seen") && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
           document.documentElement.classList.add("intro-active");
         }
       } catch (e) {}

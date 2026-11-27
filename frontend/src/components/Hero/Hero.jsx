@@ -6,7 +6,7 @@ import HeroCanvas from "./HeroCanvas";
 import "./Hero.css";
 
 const ringText =
-  "COMPUTER SCIENCE ✦ SOFTWARE DEVELOPMENT ✦ TEST AUTOMATION ✦ AI-POWERED APPS ✦ ";
+  "WEB DEVELOPMENT ✦ TEST AUTOMATION ✦ AI-POWERED APPS ✦ MCP & AGENTS ✦ ";
 
 export default function Hero() {
   const heroRef = useRef(null);
@@ -80,9 +80,8 @@ export default function Hero() {
           </h1>
 
           <p className="hero__lede">
-            I'm a Computer Science student at {profile.university} and an aspiring software developer. I
-            like building practical software, from automation that tests websites and chatbots to AI tools
-            that turn plain-language ideas into playable games.
+            I'm an aspiring web developer who likes building practical web apps, from automation that
+            tests websites and chatbots to AI tools that turn plain-language ideas into playable games.
           </p>
 
           <div className="hero__ctas">
@@ -161,7 +160,7 @@ export default function Hero() {
           </div>
           <div>
             <dt className="mono">Interests</dt>
-            <dd>Software · Automation · AI</dd>
+            <dd>Web · Automation · AI</dd>
           </div>
         </dl>
         <a href="#about" className="hero__scroll mono" aria-label="Scroll to About section">

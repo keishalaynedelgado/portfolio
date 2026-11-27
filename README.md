@@ -14,9 +14,9 @@ frontend/                 the website (React + Vite)
   src/
     main.jsx  App.jsx
     components/           one folder per section (JSX + CSS side by side)
-      Preloader/          intro curtain (once per visit)
+      Intro/              scroll-story entrance before the hero
       Cursor/             custom cursor + magnetic buttons (desktop only)
-      Navbar/ Hero/ Marquee/ About/ Projects/ Skills/ Leadership/ Contact/ Footer/
+      Navbar/ Hero/ Marquee/ About/ Projects/ Skills/ Leadership/ Certificates/ Contact/ Footer/
       ui/                 shared pieces: Reveal, SectionHeading, Lightbox, Scramble, Icons
     data/                 ALL editable content lives here
     hooks/                useInView, useActiveSection, useScrollProgress
@@ -80,7 +80,7 @@ The current screenshots were captured from the real apps in `E:\Playwright`, `E:
 No data is made up. Save new screenshots as `.webp` (or `.png`) in `frontend/public/projects/`.
 
 ## Interactive details
-- Intro curtain with your name and a counter. It plays once per browser session.
+- Scroll-story entrance (`components/Intro/`): press start, a big 3D dragon (Three.js, built in code: a sleek, regal female dragon in a monochrome blue palette (#e3f2fd to #0a3d91) with dragon scales, a plated chest, long S-arched neck, fierce glowing almond eyes, dark swept horns, semi-translucent scalloped wings, and wispy ice-white-to-electric-blue flames along her neck, spine and tail tip) winds up, charges and smashes head-first through a wall of code tiles (flash, screen shake, flying tiles), the camera flies through the hole, a name badge with your photo (`frontend/public/intro/keisha.webp`) drops in on a lanyard, the dragon sweeps back in beside it, and clouds roll in and hand off to the hero. The 3D dragon is `components/Intro/Dragon3D.js` (loaded on demand); `dragon-white.svg` is the drawn fallback for devices without WebGL. Scrolling drives it (and rewinds it); "Scroll to start" plays it, "Skip intro" jumps to the hero. Hidden with reduced motion.
 - The hero dot grid reacts to the cursor, and a click sends a ripple through it.
 - Custom cursor with "View" / "Play" labels, plus magnetic buttons (mouse only).
 - Screenshot frames scroll on hover, and a lightbox has keyboard controls (Esc, ← →).

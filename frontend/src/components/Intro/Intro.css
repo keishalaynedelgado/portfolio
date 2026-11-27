@@ -1,0 +1,524 @@
+/* ==========================================================
+   Scroll-story entrance (Intro.jsx). The section is tall; the
+   stage sticks to the screen while scrolling drives each scene.
+   Positions, the wall break and the badge swing are set from JS.
+   ========================================================== */
+.intro {
+  position: relative;
+  height: 520svh;
+}
+.intro__stage {
+  --hint: 1;
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background-color: var(--paper);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.13) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  isolation: isolate;
+}
+
+/* ---------- Start: the big button ---------- */
+.intro__start {
+  position: absolute;
+  left: 50%;
+  top: 22svh;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transform-origin: 50% 70%;
+  will-change: transform, opacity;
+}
+.intro__kicker {
+  margin: 0 0 0.9rem;
+  color: var(--blue-ink);
+  text-transform: uppercase;
+}
+.intro__title {
+  margin: 0 0 clamp(1.5rem, 4svh, 2.5rem);
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  font-weight: 750;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+.intro__title em {
+  font-weight: 400;
+  color: var(--blue);
+}
+
+.intro__button {
+  position: relative;
+  width: clamp(150px, 16vw, 210px);
+  height: clamp(118px, 12.5vw, 165px);
+  cursor: pointer;
+}
+.intro__button:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 8px;
+  border-radius: 24px;
+}
+/* The dome you press */
+.intro__cap {
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  top: 0;
+  height: 58%;
+  border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%;
+  background: radial-gradient(120% 90% at 35% 25%, #7ea2d8 0%, var(--blue) 38%, #1f3a63 100%);
+  border: 3px solid var(--ink);
+  box-shadow: inset 0 -10px 0 rgba(0, 0, 0, 0.22);
+  z-index: 1;
+  transition: filter 0.2s;
+}
+.intro__button:hover .intro__cap {
+  filter: brightness(1.08);
+}
+.intro__cap::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  top: 14%;
+  width: 34%;
+  height: 22%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  filter: blur(2px);
+}
+/* The housing it sits in */
+.intro__base {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 62%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 12%;
+  border-radius: 18px 18px 22px 22px;
+  background: linear-gradient(#f8f6f0, #dcd7ca);
+  border: 3px solid var(--ink);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.18), inset 0 6px 0 rgba(255, 255, 255, 0.7);
+}
+.intro__base::before {
+  /* rim the dome sinks into */
+  content: "";
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: -10%;
+  height: 34%;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: 3px solid var(--ink);
+}
+.intro__base-label {
+  position: relative;
+  padding: 0.25rem 0.7rem;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--paper);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.intro__hint {
+  margin: 1.4rem 0 0;
+  opacity: var(--hint);
+  text-transform: uppercase;
+}
+.intro__arrow {
+  display: inline-block;
+  animation: intro-nudge 1.2s var(--ease-in-out) infinite;
+}
+
+/* ---------- Code-tile wall ---------- */
+.intro__wall {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  will-change: transform;
+}
+.intro__tile {
+  --heat: 0;
+  position: relative;
+  aspect-ratio: 1;
+  margin: 3px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--tile);
+  border: 2px solid rgba(0, 0, 0, 0.55);
+  box-shadow:
+    inset 0 5px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.25);
+  will-change: transform;
+}
+/* Flash from the impact: brightest on the tiles that break */
+.intro__tile::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #e6f2ff 45%, #b7c8ff 100%);
+  opacity: var(--heat);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.intro__tile.is-edge::after {
+  background: radial-gradient(circle, rgba(168, 150, 255, 0.85), rgba(30, 20, 80, 0.55));
+  mix-blend-mode: normal;
+}
+.intro__tile-code {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 1vw, 0.85rem);
+  color: rgba(239, 236, 227, 0.28);
+  white-space: nowrap;
+}
+
+/* ---------- The dragon (dragon-white.svg, drawn in code) ----------
+   One wing beat every 1.5s: a strong downstroke (the wings swing down from the
+   shoulders and foreshorten) and a slower recovery. The body rises on the
+   downstroke and sinks between beats, so the wings look like they carry it. */
+.intro__dragon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  will-change: transform;
+}
+.intro__dragon-rig {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: 60% 50%;
+  animation: intro-carry 1.5s ease-in-out infinite;
+}
+.intro__dragon-art,
+.intro__dragon-art svg {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.intro__dragon-art {
+  filter: drop-shadow(0 26px 26px rgba(40, 30, 70, 0.16));
+}
+/* Parts inside the SVG; origins are in its 1301 x 729 units. */
+.intro__dragon svg g {
+  transform-box: view-box;
+}
+.intro__dragon .d-wing--near {
+  transform-origin: 792px 356px; /* near shoulder */
+  animation: intro-beat 1.5s ease-in-out infinite;
+}
+.intro__dragon .d-wing--far {
+  transform-origin: 832px 332px; /* far shoulder */
+  animation: intro-beat-far 1.5s ease-in-out infinite;
+  animation-delay: -0.06s;
+}
+.intro__dragon .d-tail {
+  transform-origin: 650px 432px;
+  animation: intro-tail 3s ease-in-out infinite alternate;
+}
+.intro__dragon .d-leg--near,
+.intro__dragon .d-leg--fore {
+  transform-origin: 680px 460px;
+  animation: intro-tail 3s ease-in-out infinite alternate-reverse;
+}
+.intro__dragon .d-leg--fore {
+  transform-origin: 868px 414px;
+}
+/* The real-3D dragon (Dragon3D.js): its canvas overscans the dragon box by 30%
+   on every side so the wings never clip; it bobs and beats on its own. */
+.intro__dragon-3d {
+  position: absolute;
+  inset: -30%;
+  z-index: 3;
+  pointer-events: none;
+}
+.intro__dragon-canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+.has-3d .intro__dragon-art {
+  display: none;
+}
+.has-3d .intro__dragon-rig {
+  animation: none;
+}
+/* Jaw drops open to breathe fire */
+.intro__dragon .d-jaw {
+  transform-origin: 956px 226px;
+  transition: transform 0.2s var(--ease);
+}
+.intro__dragon .d-mouth {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.intro__stage.is-firing .intro__dragon .d-jaw {
+  transform: rotate(14deg);
+}
+.intro__stage.is-firing .intro__dragon .d-mouth {
+  opacity: 1;
+}
+.intro__stage.is-firing .intro__dragon .d-lip {
+  opacity: 0;
+}
+
+/* White flash where the dragon hits the wall */
+.intro__impact {
+  position: absolute;
+  z-index: 5;
+  width: min(46vw, 520px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle, #ffffff 0%, rgba(214, 232, 255, 0.85) 22%, rgba(170, 150, 255, 0.35) 48%, transparent 70%);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+/* ---------- Name badge ---------- */
+.intro__badge {
+  position: absolute;
+  left: 50%;
+  top: 15svh;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* swings from the top of the lanyard, off screen */
+  transform-origin: 50% -60svh;
+  will-change: transform;
+}
+.intro__lanyard {
+  position: absolute;
+  bottom: calc(100% - 10px);
+  left: 50%;
+  width: 26px;
+  height: 80svh;
+  transform: translateX(-50%);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 22px, rgba(255, 255, 255, 0.18) 22px 24px),
+    linear-gradient(90deg, #2e4f86, var(--blue) 30%, var(--sky) 50%, var(--blue) 70%, #2e4f86);
+  border-inline: 2px solid var(--ink);
+}
+.intro__clip {
+  position: relative;
+  z-index: 1;
+  width: 34px;
+  height: 26px;
+  margin-bottom: -8px;
+  border-radius: 6px 6px 10px 10px;
+  background: linear-gradient(#d9dde3, #8c939c);
+  border: 2px solid var(--ink);
+}
+.intro__card {
+  width: clamp(220px, 21vw, 270px);
+  padding: 0 0 1.1rem;
+  border-radius: 18px;
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  box-shadow: 0 30px 50px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  overflow: hidden;
+}
+.intro__card-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.85rem 1rem 0.75rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+.intro__card-head span:last-child {
+  color: var(--sky);
+}
+.intro__photo {
+  width: 118px;
+  height: 132px;
+  margin: 1.1rem auto 0.9rem;
+  border-radius: 14px;
+  border: 2.5px solid var(--ink);
+  overflow: hidden;
+  background: var(--sky-soft);
+  box-shadow: 0 0 0 4px var(--paper), 0 0 0 5.5px rgba(0, 0, 0, 0.18);
+}
+.intro__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+.intro__card-name {
+  margin: 0 1rem;
+  font-size: 1.15rem;
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.intro__card-role {
+  margin: 0.35rem 1rem 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--blue-ink);
+}
+.intro__card-uni {
+  margin: 0.35rem 1rem 0;
+  font-size: 0.62rem;
+  opacity: 0.7;
+}
+.intro__card-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 1rem 1rem 0;
+  padding-top: 0.9rem;
+  border-top: 1.5px dashed var(--ink-line);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+}
+.intro__barcode {
+  width: 70%;
+  height: 26px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--ink) 0 2px,
+    transparent 2px 4px,
+    var(--ink) 4px 5px,
+    transparent 5px 8px,
+    var(--ink) 8px 11px,
+    transparent 11px 12px
+  );
+}
+
+/* ---------- Clouds ---------- */
+.intro__clouds {
+  position: absolute;
+  left: -2%;
+  width: 104%;
+  top: 0;
+  z-index: 5;
+  pointer-events: none;
+  will-change: transform;
+  transform: translateY(110svh);
+}
+.intro__clouds svg {
+  display: block;
+  width: 100%;
+  /* follows the width; the puffs keep their shape and crop at the sides on phones */
+  /* tall enough that the highest puffs are never sliced off (viewBox starts at -200) */
+  height: clamp(280px, 44vw, 635px);
+  overflow: visible;
+  margin-bottom: -2px;
+}
+.intro__clouds-body {
+  height: 130svh;
+}
+.intro__clouds--0 {
+  opacity: 0.92;
+}
+.intro__clouds--2 svg {
+  filter: drop-shadow(0 -8px 18px rgba(60, 50, 120, 0.08));
+}
+
+/* ---------- Skip ---------- */
+.intro__skip {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3svh, 1.75rem);
+  z-index: 6;
+  padding: 0.55rem 0.9rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.intro__skip:hover,
+.intro__skip:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+@keyframes intro-beat {
+  0%,
+  100% {
+    transform: rotate(4deg) scaleY(1);
+  }
+  42% {
+    transform: rotate(-16deg) scaleY(0.78);
+  }
+}
+@keyframes intro-beat-far {
+  0%,
+  100% {
+    transform: rotate(3deg) scaleY(1);
+  }
+  42% {
+    transform: rotate(-14deg) scaleY(0.8);
+  }
+}
+@keyframes intro-tail {
+  from {
+    transform: rotate(-2.5deg);
+  }
+  to {
+    transform: rotate(2.5deg);
+  }
+}
+@keyframes intro-carry {
+  0%,
+  100% {
+    transform: translateY(8px) rotate(0.5deg);
+  }
+  45% {
+    transform: translateY(-14px) rotate(-1deg);
+  }
+}
+@keyframes intro-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+/* Hold the hero's entrance animations until the intro hands off */
+.intro-active .hero *,
+.intro-active .hero *::before,
+.intro-active .hero *::after {
+  animation-play-state: paused !important;
+}
+
+@media (max-width: 700px) {
+  .intro__start {
+    top: 20svh;
+  }
+  .intro__tile {
+    margin: 2px;
+    border-radius: 9px;
+  }
+}

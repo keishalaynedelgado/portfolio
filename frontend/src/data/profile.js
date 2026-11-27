@@ -13,7 +13,7 @@ export const profile = {
   firstName: "Keisha",
   initials: "KLD",
   role: "Computer Science Student",
-  title: "Aspiring Software Developer",
+  title: "Aspiring Web Developer",
   university: "Xavier University – Ateneo de Cagayan",
   universityShort: "XU – Ateneo de Cagayan",
 

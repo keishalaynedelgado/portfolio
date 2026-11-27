@@ -43,7 +43,7 @@ export default function Navbar() {
           </span>
           <span className="nav__brand-text">
             <strong>Keisha Delgado</strong>
-            <span className="mono">CS · Software Dev</span>
+            <span className="mono">Web Developer</span>
           </span>
         </a>
 

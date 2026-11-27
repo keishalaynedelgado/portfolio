@@ -5,9 +5,10 @@ import "./Lightbox.css";
 /**
  * Full-screen image viewer.
  * items: [{ src, title, caption, alt }], index: number | null
+ * fit: show each image whole (no scrolling), e.g. for certificates
  * Keyboard: Esc closes, ← / → move between images.
  */
-export default function Lightbox({ items, index, onClose, onIndex }) {
+export default function Lightbox({ items, index, onClose, onIndex, fit = false }) {
   const closeRef = useRef(null);
   const lastFocus = useRef(null);
   const open = index !== null && index !== undefined;
@@ -57,7 +58,7 @@ export default function Lightbox({ items, index, onClose, onIndex }) {
   const many = items.length > 1;
 
   return createPortal(
-    <div className="lightbox" role="dialog" aria-modal="true" aria-label={item.title} onClick={onClose}>
+    <div className={`lightbox${fit ? " lightbox--fit" : ""}`} role="dialog" aria-modal="true" aria-label={item.title} onClick={onClose}>
       <figure className="lightbox__figure" onClick={(e) => e.stopPropagation()}>
         <div className="lightbox__scroll">
           <img key={item.src} src={item.src} alt={item.alt || item.title} />

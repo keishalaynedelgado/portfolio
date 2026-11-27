@@ -5,8 +5,8 @@ import "./About.css";
 
 const interests = [
   {
-    title: "Software Development",
-    body: "Writing software with languages and frameworks like Python, Java, React.js, and Node.js, and connecting it all to real databases.",
+    title: "Web Development",
+    body: "Building web apps with React.js, Node.js and Express, from the interface down to the API and a real PostgreSQL database.",
     glyph: (
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <path d="M17 15 8 24l9 9M31 15l9 9-9 9M27 11l-6 26" />
@@ -35,7 +35,7 @@ const interests = [
   },
   {
     title: "Tech Communities",
-    body: "Planning projects and running events with GDSC and DEVCON Cagayan de Oro, where organizing meets technology.",
+    body: "Leading projects with GDSC in school, and planning and running events with DEVCON Cagayan de Oro outside it.",
     glyph: (
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <circle cx="17" cy="18" r="6" />
@@ -63,7 +63,7 @@ export default function About() {
           id="about-title"
           title={
             <>
-              I like software that <span className="serif">does real work.</span>
+              I like building things that <span className="serif">do real work.</span>
             </>
           }
         />
@@ -72,14 +72,14 @@ export default function About() {
           <div className="about__story">
             <Reveal as="p" className="about__lead">
               I'm {profile.firstName}, a Computer Science student at {profile.university}. I'm drawn to
-              the point where software stops being an exercise and starts being{" "}
+              the point where code stops being an exercise and starts being{" "}
               <mark>useful</mark>: saving someone time, checking that something works, or turning an idea
               into something you can actually play.
             </Reveal>
             <Reveal as="p" delay={100} className="about__body">
-              My projects so far have taken me into test automation and AI-powered applications. Outside
-              the classroom, I help plan and run tech community initiatives through Google Developer
-              Student Clubs and DEVCON Cagayan de Oro.
+              My projects and my OJT at MeldCX have taken me into web apps, test automation, MCP servers and AI agents. In
+              school, I've helped lead projects with Google Developer Student Clubs, and outside school I help plan and run
+              tech community events with DEVCON Cagayan de Oro.
             </Reveal>
           </div>
 

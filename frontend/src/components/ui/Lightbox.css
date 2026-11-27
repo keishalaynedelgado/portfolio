@@ -41,6 +41,22 @@
   width: 100%;
   height: auto;
 }
+/* fit: show the whole image (certificates) instead of scrolling a tall capture */
+.lightbox--fit .lightbox__figure {
+  width: auto;
+  justify-items: center;
+}
+.lightbox--fit .lightbox__scroll {
+  overflow: hidden;
+  background: transparent;
+}
+.lightbox--fit .lightbox__scroll img {
+  display: block;
+  width: auto;
+  max-width: min(1200px, calc(100vw - 9rem));
+  max-height: calc(100vh - 11rem);
+  object-fit: contain;
+}
 .lightbox__caption {
   display: flex;
   flex-wrap: wrap;

@@ -60,7 +60,7 @@ export default function Contact() {
       <div className="container contact__inner">
         <div className="contact__intro">
           <Reveal className="contact__meta mono">
-            <span className="section-heading__index">05</span>
+            <span className="section-heading__index">06</span>
             <span className="section-heading__rule" />
             <span>Contact</span>
           </Reveal>
