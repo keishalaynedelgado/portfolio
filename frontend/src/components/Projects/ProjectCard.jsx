@@ -5,7 +5,7 @@ import { ArrowUpRight, GitHub, Plus } from "../ui/Icons";
 import ProjectScreens from "./ProjectScreens";
 import ProjectVisual from "./ProjectVisual";
 import FireDragon from "./FireDragon/FireDragon";
-import WalkingBread from "./WalkingBread/WalkingBread";
+import SynthieBot from "./SynthieBot/SynthieBot";
 
 export default function ProjectCard({ project, index }) {
   const [open, setOpen] = useState(false);
@@ -57,7 +57,7 @@ export default function ProjectCard({ project, index }) {
         >
           {hasScreens ? <ProjectScreens project={project} onOpen={openScreens} /> : <ProjectVisual project={project} />}
         </div>
-        {project.mascot === "bread" && <WalkingBread />}
+        {project.mascot === "synthie" && <SynthieBot />}
       </Reveal>
 
       <Reveal className="project__content" delay={120}>
@@ -131,6 +131,9 @@ export default function ProjectCard({ project, index }) {
           </div>
         </div>
       </Reveal>
+
+      {/* The dragon flies over this part of the card only, not the games gallery below. */}
+      {project.mascot === "dragon" && <FireDragon />}
       </div>
 
       {project.showcase?.items?.length > 0 && (
@@ -165,8 +168,6 @@ export default function ProjectCard({ project, index }) {
           </ul>
         </Reveal>
       )}
-
-      {project.mascot === "dragon" && <FireDragon />}
 
       <Lightbox items={viewer.items} index={viewer.index} onClose={closeViewer} onIndex={setViewerIndex} />
     </article>

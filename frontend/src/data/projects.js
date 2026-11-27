@@ -17,7 +17,7 @@
  *  showcase    optional gallery under the card: { title, intro, items: [{ src, title, caption }] }
  *  visual      fallback illustration when there are no screens: "automation" | "chat" | "generic"
  *  mascot      optional animated character: "dragon" (the K Games dragon, flies around the card)
- *              or "bread" (a walking slice of bread on top of the screenshot frame)
+ *              or "synthie" (the Synthie robot logo, walking on top of the screenshot frame)
  *  links       optional { repo, demo } URLs; empty values are hidden
  */
 export const projects = [
@@ -175,7 +175,7 @@ export const projects = [
       },
     ],
     visual: "chat",
-    mascot: "bread",
+    mascot: "synthie",
     links: { repo: "https://github.com/keishalaynedelgado/Chatbot", demo: "" },
   },
   {

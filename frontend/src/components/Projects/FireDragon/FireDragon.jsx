@@ -1,18 +1,28 @@
 import { useEffect, useRef } from "react";
-import dragonMarkup from "./dragon.svg?raw";
+import dragonMarkup from "./dragon-side.svg?raw";
 import "./FireDragon.css";
 
 const EMBERS = [0, 1, 2, 3, 4, 5, 6, 7];
 
 const FIRE_MS = 1300; // how long one breath of fire lasts
-const CRUISE = 230; // px/s while flying
-const HOVER = 45; // px/s while breathing fire
+const CRUISE = 210; // px/s while flying
+const HOVER = 40; // px/s while breathing fire
+const TURN_MS = 950; // dive, roll over, pull out the other way
+const MAX_PITCH = 22; // degrees the nose tilts when climbing or diving
+
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 
 /**
- * The K Games dragon (from the K Games project's own artwork) flying around the
- * K Games card. It wanders between random points inside the part of the card
- * that is on screen, turns to face where it's going, banks as it climbs and
- * dives, and every few seconds hovers to breathe fire. Click it to make it fire.
+ * The K Games dragon flying side-on over the top part of the K Games card
+ * (title, text and screenshot), and only there: it never flies into the games
+ * gallery below or off the card, and anything past that area is clipped.
+ * It wanders between points in the visible part of the card, tilts its nose
+ * as it climbs and dives, and every few seconds hovers to breathe fire.
+ * Click it to make it fire.
+ *
+ * To turn around it does what a flyer would: it swoops into a dive, rolls over
+ * along its spine, and pulls out facing the other way (no mirror flip).
  *
  * The flight runs on requestAnimationFrame only while the card is on screen.
  * With reduced motion the dragon stays parked with a still flame.
@@ -34,33 +44,42 @@ export default function FireDragon() {
       return;
     }
 
-    const s = { x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0, face: 1, faceVal: 1, started: false, away: false, fireUntil: 0, nextFire: 0, lastCheck: 0 };
+    const s = {
+      x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0,
+      face: 1, pitch: 0,
+      turn: null, // { from, dive, t0 } while turning around
+      started: false, fireUntil: 0, nextFire: 0, lastCheck: 0,
+    };
     stateRef.current = s;
     let frame = 0;
     let last = 0;
     let onScreen = false;
 
-    // Where the dragon may fly: inside the card, limited to the part that's visible
-    // below the navbar. `roomy` is false when too little of the card is on screen.
+    // Where the dragon may fly: inside the card, limited to the part that's
+    // visible below the navbar when there's room for it.
     const bounds = () => {
       const r = area.getBoundingClientRect();
-      const d = flight.offsetWidth;
+      const w = flight.offsetWidth;
+      const h = flight.offsetHeight;
+      const W = area.clientWidth;
       const H = area.clientHeight;
       const navH = document.querySelector(".nav")?.offsetHeight ?? 72;
-      const top = Math.max(-d * 0.2, navH + 8 - r.top);
-      const bottom = Math.min(H, window.innerHeight - r.top);
-      const minY = top;
-      const maxY = Math.max(minY, Math.min(H - d, bottom - d * 0.95));
-      return { d, H, minX: -d * 0.15, maxX: area.clientWidth - d * 0.85, minY, maxY, roomy: bottom - top >= d * 1.15 };
+      const top = clamp(navH + 8 - r.top, 0, H);
+      const bottom = clamp(window.innerHeight - r.top, 0, H);
+      const maxX = Math.max(0, W - w);
+      const cardMaxY = Math.max(0, H - h);
+      let minY = clamp(top, 0, cardMaxY);
+      let maxY = clamp(bottom - h, minY, cardMaxY);
+      return { w, h, maxX, cardMaxY, minY, maxY, roomy: bottom - top >= h * 1.2 };
     };
 
     // Next waypoint: somewhere visible, and far enough away that it really travels.
     const pickTarget = () => {
       const b = bounds();
       for (let i = 0; i < 10; i++) {
-        const x = b.minX + Math.random() * (b.maxX - b.minX);
+        const x = Math.random() * b.maxX;
         const y = b.minY + Math.random() * (b.maxY - b.minY);
-        if (Math.hypot(x - s.x, y - s.y) > (b.maxX - b.minX) * 0.35 || i === 9) {
+        if (Math.abs(x - s.x) > b.maxX * 0.35 || i === 9) {
           s.tx = x;
           s.ty = y;
           return;
@@ -68,19 +87,21 @@ export default function FireDragon() {
       }
     };
 
-    // Enter from the left or right edge, at the height of the visible area.
+    // Appear just inside the left or right edge of the card, heading inwards.
     const enter = (now) => {
       const b = bounds();
       const fromLeft = Math.random() < 0.6;
-      s.x = fromLeft ? -b.d * 1.3 : b.maxX + b.d * 1.3;
+      s.x = fromLeft ? 0 : b.maxX;
       s.y = b.minY + (b.maxY - b.minY) * (0.15 + Math.random() * 0.3);
-      s.vx = fromLeft ? CRUISE : -CRUISE;
+      s.face = fromLeft ? 1 : -1;
+      s.vx = s.face * CRUISE * 0.6;
       s.vy = 0;
-      s.face = s.faceVal = fromLeft ? 1 : -1;
-      s.nextFire = now + 1600;
+      s.pitch = 0;
+      s.turn = null;
+      s.nextFire = now + 1800;
       s.started = true;
-      s.away = false;
       pickTarget();
+      if (Math.sign(s.tx - s.x) !== s.face) s.tx = fromLeft ? b.maxX * 0.7 : b.maxX * 0.3;
       flight.style.opacity = "1";
     };
 
@@ -89,32 +110,19 @@ export default function FireDragon() {
       last = now;
       frame = requestAnimationFrame(tick);
 
-      if (now - s.lastCheck > 300 || !s.started) {
+      if (!s.started) {
+        if (!bounds().roomy) return;
+        enter(now);
+      } else if (now - s.lastCheck > 300) {
+        // Re-aim when the page scrolls and the waypoint is no longer in view.
         s.lastCheck = now;
         const b = bounds();
-        if (!s.started) {
-          // Waiting off stage: come in once enough of the card is on screen.
-          if (!b.roomy) return;
-          enter(now);
-        } else if (!b.roomy) {
-          // Too little of the card left on screen: fly off the nearest side.
-          if (!s.away) {
-            s.away = true;
-            s.tx = s.x < b.maxX / 2 ? -b.d * 2 : b.maxX + b.d * 2;
-            s.ty = Math.min(s.y, b.H - b.d);
-          }
-        } else if (s.away) {
-          s.away = false;
-          pickTarget();
-        } else if (s.ty < b.minY - 10 || s.ty > b.maxY + 10 || s.tx > b.maxX + 10) {
-          // Re-aim when the page scrolls and the waypoint is no longer on screen.
-          pickTarget();
-        }
+        if (s.ty < b.minY - 10 || s.ty > b.maxY + 10 || s.tx > b.maxX + 10) pickTarget();
       }
 
-      // Fire schedule: hover and breathe fire every few seconds (not while leaving).
-      let firing = now < s.fireUntil && !s.away;
-      if (!firing && !s.away && now > s.nextFire) {
+      // Fire schedule: hover and breathe fire every few seconds, never mid-turn.
+      let firing = now < s.fireUntil;
+      if (!firing && !s.turn && now > s.nextFire) {
         s.fireUntil = now + FIRE_MS;
         s.nextFire = now + FIRE_MS + 2600 + Math.random() * 3200;
         firing = true;
@@ -125,41 +133,75 @@ export default function FireDragon() {
       const dx = s.tx - s.x;
       const dy = s.ty - s.y;
       const dist = Math.hypot(dx, dy) || 1;
-      if (dist < 40) {
-        if (s.away) {
-          // Off stage: hide and wait to fly back in.
-          flight.style.opacity = "0";
-          s.started = false;
-          return;
-        }
-        pickTarget();
-      }
-      const speed = firing ? HOVER : CRUISE;
+      if (dist < 40) pickTarget();
+      const speed = firing ? HOVER : s.turn ? CRUISE * 0.75 : CRUISE;
       const k = Math.min(1, dt * 2.2);
       s.vx += ((dx / dist) * speed - s.vx) * k;
       s.vy += ((dy / dist) * speed - s.vy) * k;
       s.x += s.vx * dt;
       s.y += s.vy * dt;
 
-      // Face the direction of travel (not mid-breath), turning through a quick flip.
-      if (!firing) {
-        if (s.vx > 25) s.face = 1;
-        else if (s.vx < -25) s.face = -1;
-      }
-      s.faceVal += (s.face - s.faceVal) * Math.min(1, dt * 9);
-      const bank = Math.max(-14, Math.min(14, s.vy * 0.06));
+      // Never leave the card.
+      const b = bounds();
+      s.x = clamp(s.x, 0, b.maxX);
+      s.y = clamp(s.y, 0, b.cardMaxY);
 
-      flight.style.transform = `translate3d(${s.x.toFixed(1)}px, ${s.y.toFixed(1)}px, 0)`;
-      orient.style.transform = `scaleX(${s.faceVal.toFixed(3)}) rotate(${bank.toFixed(2)}deg)`;
+      // Waypoint behind it: turn around (not while breathing fire).
+      if (!s.turn && !firing && Math.abs(dx) > 60 && Math.sign(dx) !== s.face) {
+        // Dive into the turn, or climb into it when there's no room below.
+        const dive = s.y < (b.minY + b.maxY) / 2 + b.h * 0.1 ? 1 : -1;
+        s.turn = { from: s.face, dive, t0: now };
+      }
+
+      // Nose follows climbs and dives a little while cruising.
+      const wantPitch = firing ? 0 : clamp((Math.atan2(s.vy, Math.abs(s.vx) + 1) * 180) / Math.PI, -MAX_PITCH, MAX_PITCH);
+      s.pitch += (wantPitch - s.pitch) * Math.min(1, dt * 5);
+
+      let rot = s.face * s.pitch;
+      let roll = 0;
+      let face = s.face;
+      let swoop = 0;
+      if (s.turn) {
+        const { from, dive } = s.turn;
+        const p = Math.min(1, (now - s.turn.t0) / TURN_MS);
+        face = from;
+        // 0-0.4 tip the nose down (or up), 0.4-0.6 roll over along the spine,
+        // 0.6-1 pull out level facing the other way.
+        const tip = 80 * dive;
+        if (p < 0.4) {
+          rot = from * (s.pitch + (tip - s.pitch) * ease(p / 0.4));
+        } else if (p < 0.6) {
+          rot = from * tip;
+          roll = 180 * ease((p - 0.4) / 0.2);
+        } else {
+          rot = from * tip * (1 - ease((p - 0.6) / 0.4));
+          roll = 180;
+        }
+        swoop = dive * Math.sin(Math.PI * p) * b.h * 0.35;
+        if (p >= 1) {
+          // Same picture as roll 180, written the plain way round.
+          s.face = -from;
+          s.pitch = 0;
+          s.turn = null;
+          face = s.face;
+          rot = 0;
+          roll = 0;
+          swoop = 0;
+        }
+      }
+
+      const drawY = clamp(s.y + swoop, 0, b.cardMaxY);
+      flight.style.transform = `translate3d(${s.x.toFixed(1)}px, ${drawY.toFixed(1)}px, 0)`;
+      orient.style.transform = `rotateY(${roll.toFixed(1)}deg) rotate(${rot.toFixed(2)}deg) scaleX(${face})`;
     };
 
     const start = () => {
       if (frame || !onScreen || document.hidden) return;
       last = 0;
-      // Coming back to a card whose dragon is far off screen: fly in again.
+      // Coming back to a card whose dragon is far off screen: appear again.
       if (s.started) {
         const b = bounds();
-        if (s.y < b.minY - b.d * 2 || s.y > b.maxY + b.d * 2) {
+        if (s.y < b.minY - b.h * 2 || s.y > b.maxY + b.h * 2) {
           s.started = false;
           flight.style.opacity = "0";
         }
@@ -190,7 +232,9 @@ export default function FireDragon() {
 
   const breatheFire = () => {
     const area = areaRef.current;
-    if (stateRef.current) stateRef.current.fireUntil = performance.now() + 1100;
+    const s = stateRef.current;
+    if (s?.turn) return; // it can't breathe fire mid-roll
+    if (s) s.fireUntil = performance.now() + 1100;
     area.classList.remove("is-burst");
     void area.offsetWidth; // restart the burst animation on repeated clicks
     area.classList.add("is-burst");
@@ -203,6 +247,7 @@ export default function FireDragon() {
       <div ref={flightRef} className="fire-dragon__flight">
         <div ref={orientRef} className="fire-dragon__orient">
           <div className="fire-dragon__rig">
+            {/* The one flame: it starts at the mouth and turns with the dragon. */}
             <div className="fire-dragon__fire" aria-hidden="true">
               <svg viewBox="0 0 400 120" preserveAspectRatio="none">
                 <defs>

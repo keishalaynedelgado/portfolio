@@ -16,10 +16,14 @@
   min-width: 0;
 }
 
-/* A mascot flies around the whole card (FireDragon); --d is its size. */
+/* --d is a mascot's size. The dragon (FireDragon) flies over the top part of
+   its card only (title, text and screenshot), never the games gallery below. */
 .project--mascot {
   position: relative;
   --d: clamp(120px, 13vw, 190px);
+}
+.project--mascot-dragon .project__main {
+  position: relative;
 }
 @media (max-width: 640px) {
   .project--mascot {
@@ -27,21 +31,21 @@
   }
 }
 
-/* The walking bread stands on top of the frame (--bh is its height):
+/* The walking Synthie robot stands on top of the frame (--bh is its height):
    keep it below the navbar while the frame is sticky. */
-.project--mascot-bread {
+.project--mascot-synthie {
   --bh: clamp(72px, 6.5vw, 96px);
 }
-.project--screens.project--mascot-bread .project__media-wrap {
+.project--screens.project--mascot-synthie .project__media-wrap {
   top: calc(var(--nav-h) + 1rem + var(--bh));
 }
 @media (max-width: 1080px) {
-  .project--screens.project--mascot-bread .project__media-wrap {
+  .project--screens.project--mascot-synthie .project__media-wrap {
     top: auto;
   }
 }
 @media (max-width: 640px) {
-  .project--mascot-bread {
+  .project--mascot-synthie {
     --bh: 66px;
   }
 }
